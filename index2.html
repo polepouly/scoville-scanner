@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🌶️ Scoville Scanner - Étiquette</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: #1a1e1c;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+      margin: 0;
+    }
+    .app-card {
+      max-width: 480px;
+      width: 100%;
+      background: #fcf7f0;
+      border-radius: 48px 48px 32px 32px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255, 200, 100, 0.2);
+      overflow: hidden;
+      padding: 20px 16px 28px;
+    }
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #b22222;
+      letter-spacing: -0.5px;
+      padding-bottom: 6px;
+      border-bottom: 3px dashed #e0c9b0;
+    }
+    h1 small {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: #6b4e3a;
+      margin-left: auto;
+      background: #ede3d7;
+      padding: 4px 14px;
+      border-radius: 40px;
+    }
+    .scanner-box {
+      position: relative;
+      margin: 16px 0 14px;
+      background: #2d2a26;
+      border-radius: 36px;
+      overflow: hidden;
+      box-shadow: inset 0 4px 8px rgba(0,0,0,0.6);
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: #0d0b09;
+    }
+    #canvas {
+      display: none;
+    }
+    .scan-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 50%, transparent 58%, rgba(0,0,0,0.4) 80%);
+      border: 2px solid rgba(255, 220, 150, 0.3);
+      border-radius: 36px;
+      box-shadow: inset 0 0 40px rgba(255, 100, 0, 0.2);
+    }
+    .scan-line {
+      position: absolute;
+      top: 20%;
+      left: 10%;
+      width: 80%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #ff9f4b, #ff3c00, #ff9f4b, transparent);
+      filter: drop-shadow(0 0 10px #ff6a00);
+      opacity: 0.8;
+      animation: scanMove 3.5s ease-in-out infinite;
+      border-radius: 100%;
+    }
+    @keyframes scanMove {
+      0% { top: 15%; opacity: 0.4; }
+      50% { top: 80%; opacity: 1; }
+      100% { top: 15%; opacity: 0.4; }
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background: #2b2b28;
+      border: none;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 12px 20px;
+      border-radius: 60px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 0 #0f0f0e, 0 4px 12px rgba(0,0,0,0.3);
+      transition: all 0.08s linear;
+      cursor: pointer;
+      flex: 1 1 auto;
+      justify-content: center;
+    }
+    .btn:active {
+      transform: translateY(5px);
+      box-shadow: 0 1px 0 #0f0f0e;
+    }
+    .btn-primary {
+      background: #d94f2a;
+      box-shadow: 0 6px 0 #7e2b14;
+    }
+    .btn-primary:active {
+      background: #b83d1d;
+    }
+    .btn-secondary {
+      background: #4d4a45;
+      box-shadow: 0 6px 0 #2b2925;
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #0f0f0e;
+      pointer-events: none;
+    }
+    .result-card {
+      margin: 18px 0 10px;
+      padding: 18px 16px;
+      background: #e8ddd0;
+      border-radius: 32px;
+      box-shadow: inset 0 2px 8px rgba(90, 50, 20, 0.2);
+      transition: 0.2s;
+    }
+    .result-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6
